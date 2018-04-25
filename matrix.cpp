@@ -105,7 +105,13 @@ matrix& matrix::operator=(const matrix& rhs)
 matrix matrix::identity(unsigned int size)
 {
 	// use p-constructor
-	return matrix(size,size);
+	matrix ret(size,size);
+
+	for(int unsigned i = 0; i < size; i++){
+		ret[i][i] = 1;
+	}
+
+	return ret;
 }
 
 
@@ -138,7 +144,7 @@ matrix matrix::operator*(const matrix& rhs) const
 
 	for(unsigned int i = 0; i < rows; i++){
 		for(unsigned int j = 0; j < rhs.cols; j++){
-			int sum = 0;
+			double sum = 0.0;
 			for(unsigned int k = 0; k < cols; k++){
 				sum = sum + (the_matrix[i][k] * rhs[k][j]);
 			}

@@ -17,10 +17,13 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include "viewcontext.h"
 
 int main(int argc, char**argv) {
 
 	GraphicsContext* gc = new X11Context(800, 600, GraphicsContext::BLACK);
+
+	viewcontext vc;
 
 	std::ofstream fileOut;
 
@@ -34,6 +37,23 @@ int main(int argc, char**argv) {
 			  << "\tTriangle = t\n"
 			  << "\tCircle   = c\n"
 			  << "When the program is closed, the image will be saved to output.txt.\n";
+
+	/// TEST CODE FOR VIEWCONTEXT !=====================================================
+
+	std::cout << "\nRotate Matrix:\n";
+	vc.rotate(45,180,180);
+
+	std::cout << "\nScale Matrix:\n";
+
+	vc.scale(10,9,8);
+
+	std::cout << "\nTranslate Matrix:\n";
+	vc.translate(7,6,5);
+
+	std::cout << "\nTransform Matrix:\n";
+	vc.out();
+
+	/// END CODE FOR VIEWCONTEXT !=====================================================
 
 	if(argc == 2){
 		// load the specified file first.
