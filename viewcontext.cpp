@@ -63,11 +63,28 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 // | 0 0 0 1 ]
 void viewcontext::scale(double x, double y, double z){
 	//TODO
+
+
+
 	matrix scaler = matrix::identity(4);
 
-	scaler[0][0] = x;
-	scaler[1][1] = y;
-	scaler[2][2] = z;
+	if(x == 0.0){
+		scaler[0][0] = MINIMUM_ALLOWED_SCALE;
+	} else {
+		scaler[0][0] = x;
+	}
+
+	if(y == 0.0){
+		scaler[1][1] = MINIMUM_ALLOWED_SCALE;
+	} else {
+		scaler[1][1] = y;
+	}
+
+	if(z == 0.0){
+		scaler[2][2] = MINIMUM_ALLOWED_SCALE;
+	} else {
+		scaler[2][2] = z;
+	}
 
 	*transform = *transform * scaler;
 }

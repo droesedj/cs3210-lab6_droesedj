@@ -14,6 +14,10 @@
 //#include "dynamicdraw.h"
 #include <cmath>
 
+
+#define MINIMUM_ALLOWED_SCALE 0.0000001
+
+
 class viewcontext {
 public:
 

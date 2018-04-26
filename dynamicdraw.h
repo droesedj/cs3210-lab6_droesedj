@@ -24,6 +24,7 @@
 
 #define DRAWMODE_ROTATE 100
 #define DRAWMODE_TRANSLATE 101
+#define DRAWMODE_SCALE 102
 
 /// Triangle states
 #define STATE_NEWTRI 0
