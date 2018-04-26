@@ -8,6 +8,9 @@
 #include "viewcontext.h"
 
 
+void updateInverse();
+
+
 viewcontext::viewcontext(){
 	transform = new matrix(4,4);
 	*transform = matrix::identity(4);
@@ -82,6 +85,7 @@ void viewcontext::translate(double x, double y, double z){
 	//TODO
 
 	matrix translator(4,4);
+	//matrix translator = matrix::identity(4);
 
 	translator[0][3] = x;
 	translator[1][3] = y;
@@ -95,4 +99,20 @@ void viewcontext::translate(double x, double y, double z){
 
 void viewcontext::out(){
 	std::cout << *transform;
+}
+
+matrix viewcontext::applyTransform(matrix target){
+	return *transform * target;
+}
+
+
+
+/// private "Helper" Functions
+
+
+void updateInverse(){
+
+
+
+
 }

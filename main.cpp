@@ -40,18 +40,43 @@ int main(int argc, char**argv) {
 
 	/// TEST CODE FOR VIEWCONTEXT !=====================================================
 
+	matrix potato(4,3);
+
+	potato[0][0] = 20; potato[1][0] = 40;
+	potato[0][1] = 50; potato[1][1] = 88;
+	potato[0][2] = 100; potato[1][2] = 124;
+	potato[3][0] = 1; potato[3][1] = 1; potato[3][2] = 1;
+
+	std::cout << "\nPotato Matrix:\n";
+	std::cout << potato;
+	gc->setColor(GraphicsContext::MAGENTA);
+	gc->drawLine(potato[0][0],potato[1][0],potato[0][1],potato[1][1]);
+	gc->drawLine(potato[0][0],potato[1][0],potato[0][2],potato[1][2]);
+	gc->drawLine(potato[0][2],potato[1][2],potato[0][1],potato[1][1]);
+
 	std::cout << "\nRotate Matrix:\n";
-	vc.rotate(45,180,180);
+	vc.rotate(97,0,0);
 
 	std::cout << "\nScale Matrix:\n";
 
-	vc.scale(10,9,8);
+	vc.scale(5,1,1);
 
 	std::cout << "\nTranslate Matrix:\n";
-	vc.translate(7,6,5);
+	vc.translate(200,200,0);
 
 	std::cout << "\nTransform Matrix:\n";
 	vc.out();
+
+	potato = vc.applyTransform(potato);
+
+	std::cout << "\nTransformed Potato Matrix:\n";
+	std::cout << potato;
+
+
+	gc->setColor(GraphicsContext::CYAN);
+	gc->drawLine(potato[0][0],potato[1][0],potato[0][1],potato[1][1]);
+	gc->drawLine(potato[0][0],potato[1][0],potato[0][2],potato[1][2]);
+	gc->drawLine(potato[0][2],potato[1][2],potato[0][1],potato[1][1]);
 
 	/// END CODE FOR VIEWCONTEXT !=====================================================
 

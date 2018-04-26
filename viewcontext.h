@@ -32,6 +32,8 @@ public:
 
 	void out();
 
+	matrix applyTransform(matrix target);
+
 private:
 
 	matrix* transform;
