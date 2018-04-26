@@ -39,6 +39,15 @@ void circle::draw(GraphicsContext* gc){
 	gc->drawCircle((int)(*p1)[0][0], (int)(*p1)[1][0], radius);
 }
 
+void circle::draw(GraphicsContext* gc, viewcontext* vc){
+
+	matrix t1(4,4);
+	t1 = vc->applyTransform(*p1);
+
+	gc->setColor(color);
+	gc->drawCircle((int)t1[0][0], (int)t1[1][0], radius);
+}
+
 std::ostream& circle::out(std::ostream& output){
 	output << "CIRCLE\t" << color << "\t"
 			<< (*p1)[0][0] << ' '

@@ -12,18 +12,19 @@
 #include "x11context.h"
 #include "shape.h"
 #include "image.h"
+#include "viewcontext.h"
 #include "dynamicdraw.h"
 #include <unistd.h>
 #include <sstream>
 #include <iostream>
 #include <fstream>
-#include "viewcontext.h"
+
 
 int main(int argc, char**argv) {
 
 	GraphicsContext* gc = new X11Context(800, 600, GraphicsContext::BLACK);
 
-	viewcontext vc;
+//	viewcontext* vc = new viewcontext();
 
 	std::ofstream fileOut;
 
@@ -38,7 +39,7 @@ int main(int argc, char**argv) {
 			  << "\tCircle   = c\n"
 			  << "When the program is closed, the image will be saved to output.txt.\n";
 
-	/// TEST CODE FOR VIEWCONTEXT !=====================================================
+/*	/// TEST CODE FOR VIEWCONTEXT !=====================================================
 
 	matrix potato(4,3);
 
@@ -78,7 +79,9 @@ int main(int argc, char**argv) {
 	gc->drawLine(potato[0][0],potato[1][0],potato[0][2],potato[1][2]);
 	gc->drawLine(potato[0][2],potato[1][2],potato[0][1],potato[1][1]);
 
-	/// END CODE FOR VIEWCONTEXT !=====================================================
+*/	/// END CODE FOR VIEWCONTEXT !=====================================================
+
+
 
 	if(argc == 2){
 		// load the specified file first.

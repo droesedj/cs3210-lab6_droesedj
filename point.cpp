@@ -31,6 +31,14 @@ void point::draw(GraphicsContext* gc){
 	gc->setPixel((int)(*p1)[0][0], (int)(*p1)[1][0]);
 }
 
+void point::draw(GraphicsContext* gc, viewcontext* vc){
+	matrix transformed(4,4);
+	transformed = vc->applyTransform(*p1);
+
+	gc->setColor(color);
+	gc->setPixel((int)transformed[0][0], (int)transformed[1][0]);
+}
+
 std::ostream& point::out(std::ostream& output){
 	output << "POINT\t" << color << "\t"
 			<< (*p1)[0][0] << ' '

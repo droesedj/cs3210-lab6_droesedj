@@ -47,6 +47,12 @@ void image::draw(GraphicsContext* gc){
 	}
 }
 
+void image::draw(GraphicsContext* gc, viewcontext* vc){
+	for(shape* i : storage){
+		i->draw(gc,vc);
+	}
+}
+
 void image::erase(){
 	for(shape* i : storage){
 		delete i;

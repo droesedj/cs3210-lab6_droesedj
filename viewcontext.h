@@ -9,9 +9,9 @@
 #define VIEWCONTEXT_H_
 
 #include "matrix.h"
-#include "image.h"
-#include "shape.h"
-#include "dynamicdraw.h"
+//#include "image.h"
+//#include "shape.h"
+//#include "dynamicdraw.h"
 #include <cmath>
 
 class viewcontext {

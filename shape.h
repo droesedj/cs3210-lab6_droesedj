@@ -12,6 +12,7 @@
 
 #include "matrix.h"
 #include "x11context.h"
+#include "viewcontext.h"
 #include <unistd.h>
 #include <string>
 #include <sstream>
@@ -48,6 +49,11 @@ public:
 	*/
 	virtual void draw(GraphicsContext* gc) = 0;
 	
+	/**
+	*	Draws the shape with a specified viewcontext
+	*/
+	virtual void draw(GraphicsContext* gc, viewcontext* vc) = 0;
+
 	/**
 	 * @param from Shape to copy from
 	 * @return this shape
@@ -108,6 +114,9 @@ public:
 	 */
 	void draw(GraphicsContext* gc);
 
+	/// Same as draw, but applies transform based on viewcontext.
+	void draw(GraphicsContext* gc, viewcontext* vc);
+
 	/**
 	 * Output point properties to an ostream.
 	 * @param output ostream to output to.
@@ -159,6 +168,9 @@ public:
 	 */
 	void draw(GraphicsContext* gc);
 
+	/// Same as draw, but applies transform based on viewcontext.
+	void draw(GraphicsContext* gc, viewcontext* vc);
+
 	/**
 	 * Output line properties to an ostream.
 	 * @param output ostream to output to.
@@ -208,6 +220,9 @@ public:
 	 * @param gc GraphicsContext to draw the circle on.
 	 */
 	void draw(GraphicsContext* gc);
+
+	/// Same as draw, but applies transform based on viewcontext.
+	void draw(GraphicsContext* gc, viewcontext* vc);
 
 	/**
 	 * Output circle properties to an ostream.
@@ -260,6 +275,9 @@ public:
 	triangle& operator=(const triangle& from);
 	void draw(GraphicsContext* gc);
 
+	/// Same as draw, but applies transform based on viewcontext.
+	void draw(GraphicsContext* gc, viewcontext* vc);
+
 	/**
 	 * Output triangle properties to an ostream.
 	 * @param output ostream to output to.
@@ -305,6 +323,9 @@ public:
 	~poly();
 	poly& operator=(const poly& from);
 	void draw(GraphicsContext* gc);
+
+	/// Same as draw, but applies transform based on viewcontext.
+	void draw(GraphicsContext* gc, viewcontext* vc);
 
 	/**
 	 * Output polygon properties to an ostream.

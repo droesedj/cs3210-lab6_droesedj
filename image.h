@@ -11,11 +11,11 @@
 
 #include "matrix.h"
 #include "x11context.h"
+#include "shape.h"
+#include "viewcontext.h"
 #include <unistd.h>
 #include <iostream>
 #include <vector>
-#include "shape.h"
-
 
 class image {
 private:
@@ -51,6 +51,13 @@ public:
 	 * @param gc GraphicsContext to draw on.
 	 */
 	void draw(GraphicsContext* gc);
+
+	/**
+	 * Draws all shapes in the image onto the given GraphicsContext.
+	 * @param gc GraphicsContext to draw on.
+	 * @param vc viewcontext to use to calculate transformations to the image.
+	 */
+	void draw(GraphicsContext* gc, viewcontext* vc);
 
 	/**
 	 * Removes all shapes from the image.

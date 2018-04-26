@@ -81,6 +81,23 @@ void triangle::draw(GraphicsContext* gc){
 				 (int)(*p1)[0][0],(int)(*p1)[1][0]);
 }
 
+void triangle::draw(GraphicsContext* gc, viewcontext* vc){
+	matrix t1(4,4);
+	matrix t2(4,4);
+	matrix t3(4,4);
+	t1 = vc->applyTransform(*p1);
+	t2 = vc->applyTransform(*p2);
+	t3 = vc->applyTransform(*p3);
+
+	gc->setColor(color);
+	gc->drawLine((int)t1[0][0],(int)t1[1][0],
+				 (int)t2[0][0],(int)t2[1][0]);
+	gc->drawLine((int)t2[0][0],(int)t2[1][0],
+				 (int)t3[0][0],(int)t3[1][0]);
+	gc->drawLine((int)t3[0][0],(int)t3[1][0],
+				 (int)t1[0][0],(int)t1[1][0]);
+}
+
 std::ostream& triangle::out(std::ostream& output){
 	output << "TRI\t" << color << "\t"
 			<< (*p1)[0][0] << ' '

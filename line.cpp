@@ -54,6 +54,16 @@ void line::draw(GraphicsContext* gc){
 	gc->drawLine((int)(*p1)[0][0],(int)(*p1)[1][0],(int)(*p2)[0][0],(int)(*p2)[1][0]);
 }
 
+void line::draw(GraphicsContext* gc, viewcontext* vc){
+	matrix t1(4,4);
+	matrix t2(4,4);
+	t1 = vc->applyTransform(*p1);
+	t2 = vc->applyTransform(*p2);
+
+	gc->setColor(color);
+	gc->drawLine((int)t1[0][0],(int)t1[1][0],(int)t2[0][0],(int)t2[1][0]);
+}
+
 std::ostream& line::out(std::ostream& output){
 	output << "LINE\t" << color << "\t"
 			<< (*p1)[0][0] << ' '

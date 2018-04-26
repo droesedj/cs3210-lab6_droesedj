@@ -64,6 +64,38 @@ void poly::draw(GraphicsContext* gc) {
 			(int) (*iter2)[1][0]);
 }
 
+void poly::draw(GraphicsContext* gc, viewcontext* vc) {
+
+	matrix t1(4,4);
+	matrix t2(4,4);
+
+	matrix* iter;
+	matrix* iter2;
+
+	gc->setColor(color);
+
+	for (unsigned int i = 1; i < points.size(); i++) {
+		iter = points.at(i - 1);
+		iter2 = points.at(i);
+
+		t1 = vc->applyTransform(*iter);
+		t2 = vc->applyTransform(*iter2);
+
+		gc->drawLine((int) t1[0][0], (int) t1[1][0],
+				(int) t2[0][0], (int) t2[1][0]);
+	}
+
+	// connect the tail to the head
+	iter = points.front();
+	iter2 = points.back();
+
+	t1 = vc->applyTransform(*iter);
+	t2 = vc->applyTransform(*iter2);
+
+	gc->drawLine((int) t1[0][0], (int) t1[1][0], (int) t2[0][0],
+			(int) t2[1][0]);
+}
+
 std::ostream& poly::out(std::ostream& output) {
 	output << "POLY\t" << color << "\t";
 

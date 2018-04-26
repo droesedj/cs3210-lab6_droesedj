@@ -13,6 +13,7 @@
 #include "image.h"
 #include "shape.h"
 #include "matrix.h"
+#include "viewcontext.h"
 
 /// Draw modes
 #define DRAWMODE_POINT 	0
@@ -20,6 +21,9 @@
 #define DRAWMODE_TRI	2
 #define DRAWMODE_POLY	3
 #define DRAWMODE_CIRCLE	4
+
+#define DRAWMODE_ROTATE 100
+#define DRAWMODE_TRANSLATE 101
 
 /// Triangle states
 #define STATE_NEWTRI 0
@@ -33,8 +37,13 @@ public:
 	/// Image used for drawing and storing shapes.
 	image* theImage;
 
+	viewcontext* m_vc;
+
 	/// Constructor
 	dynamicdraw();
+
+	/// Constructor
+	dynamicdraw(viewcontext* vc);
 
 	/// Destructor
 	~dynamicdraw();
@@ -44,6 +53,9 @@ public:
 	 * @param gc GraphicsContext to draw on.
 	 */
 	virtual void paint(GraphicsContext* gc);
+
+	/// Same as paint, but applies viewcontext transforms.
+	virtual void paint(GraphicsContext* gc, viewcontext* vc);
 	virtual void keyUp(GraphicsContext* gc, unsigned int keycode);
 	virtual void mouseButtonDown(GraphicsContext* gc,
 					unsigned int button, int x, int y);

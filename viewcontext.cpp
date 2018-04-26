@@ -53,8 +53,6 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 	rotato[1][0] = sin(radRoll);
 	rotato[1][1] = cos(radRoll);
 
-	rotato.out(std::cout);
-
 	*transform = *transform * rotato;
 }
 
@@ -71,8 +69,6 @@ void viewcontext::scale(double x, double y, double z){
 	scaler[1][1] = y;
 	scaler[2][2] = z;
 
-	scaler.out(std::cout);
-
 	*transform = *transform * scaler;
 }
 
@@ -85,15 +81,20 @@ void viewcontext::translate(double x, double y, double z){
 	//TODO
 
 	matrix translator(4,4);
+	matrix translatorInverse(4,4);
 	//matrix translator = matrix::identity(4);
 
 	translator[0][3] = x;
 	translator[1][3] = y;
 	translator[2][3] = z;
 
-	translator.out(std::cout);
+	translatorInverse[0][3] = -x;
+	translatorInverse[1][3] = -y;
+	translatorInverse[2][3] = -z;
 
 	*transform = *transform + translator;
+
+	*inverse = *inverse + translatorInverse;
 
 }
 

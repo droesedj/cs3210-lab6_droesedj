@@ -15,6 +15,22 @@ int getDistance(int x0, int y0, int x1, int y1);
 //=================================================
 
 dynamicdraw::dynamicdraw() {
+	m_vc = new viewcontext();
+	color = GraphicsContext::WHITE;
+	theImage = new image();
+	drawingMode = DRAWMODE_POINT;
+	state = STATE_NEWTRI;
+	isDragging = false;
+	x0 = 0;
+	x1 = 0;
+	y0 = 0;
+	y1 = 0;
+	x2 = 0;
+	y2 = 0;
+}
+
+dynamicdraw::dynamicdraw(viewcontext* vc) {
+	m_vc = vc;
 	color = GraphicsContext::WHITE;
 	theImage = new image();
 	drawingMode = DRAWMODE_POINT;
@@ -30,11 +46,17 @@ dynamicdraw::dynamicdraw() {
 
 dynamicdraw::~dynamicdraw() {
 	delete theImage;
+	delete m_vc;
 }
 
 void dynamicdraw::paint(GraphicsContext* gc) {
 	// refresh the image.
 	theImage->draw(gc);
+}
+
+void dynamicdraw::paint(GraphicsContext* gc, viewcontext* vc) {
+	// refresh the image.
+	theImage->draw(gc,vc);
 }
 
 void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
@@ -50,6 +72,7 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 
 	} else if (drawingMode == DRAWMODE_POINT) {
 		point* myPoint = new point(x, y, 0, color);
+		gc->setMode(GraphicsContext::MODE_XOR);
 		myPoint->draw(gc);
 		theImage->add(myPoint);
 
@@ -81,6 +104,16 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 			gc->drawLine(x1, y1, x2, y2);
 			isDragging = true;
 		}
+	} else if(drawingMode == DRAWMODE_ROTATE){
+		x0 = x;
+		y0 = y;
+		gc->setMode(GraphicsContext::MODE_XOR);
+		isDragging = true;
+	} else if(drawingMode == DRAWMODE_TRANSLATE){
+		x0 = x;
+		y0 = y;
+		gc->setMode(GraphicsContext::MODE_XOR);
+		isDragging = true;
 	}
 }
 
@@ -102,6 +135,7 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 	} else if (drawingMode == DRAWMODE_POINT) {
 		if (isDragging) {
 			// nothing to do here, may as well make sure it's not dragging.
+			gc->setMode(GraphicsContext::MODE_NORMAL);
 			isDragging = false;
 		}
 	} else if (drawingMode == DRAWMODE_CIRCLE) {
@@ -140,6 +174,17 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 				state = STATE_NEWTRI;
 			}
 		}
+	} else if(drawingMode == DRAWMODE_ROTATE){
+		if(isDragging){
+			gc->setMode(GraphicsContext::MODE_NORMAL);
+			isDragging = false;
+
+		}
+	} else if(drawingMode == DRAWMODE_TRANSLATE){
+		if(isDragging){
+			gc->setMode(GraphicsContext::MODE_NORMAL);
+			isDragging = false;
+		}
 	}
 }
 
@@ -174,6 +219,23 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 				gc->drawLine(x1, y1, x2, y2);
 			}
 		}
+	} else if(drawingMode == DRAWMODE_ROTATE){
+		if(isDragging){
+			paint(gc,m_vc);
+			m_vc->rotate((x0 - x)/30.0,0,0);
+			paint(gc,m_vc);
+			x0 = x;
+			y0 = y;
+		}
+	} else if(drawingMode == DRAWMODE_TRANSLATE){
+		if(isDragging){
+			paint(gc,m_vc);
+			m_vc->translate(-(x0 - x), -(y0 - y),0);
+			paint(gc,m_vc);
+
+			x0 = x;
+			y0 = y;
+		}
 	}
 }
 
@@ -191,6 +253,15 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 			return;
 		} else if (keycode == 't') {
 			drawingMode = DRAWMODE_TRI;
+			return;
+
+
+			/// Tool modes for transforming image
+		} else if (keycode == 'r') {
+			drawingMode = DRAWMODE_ROTATE;
+			return;
+		} else if (keycode == 'x') {
+			drawingMode = DRAWMODE_TRANSLATE;
 			return;
 		}
 		// Color selection
