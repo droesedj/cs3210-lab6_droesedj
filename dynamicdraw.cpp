@@ -12,6 +12,11 @@
 /// Helper methods
 int getDistance(int x0, int y0, int x1, int y1);
 
+matrix inverseCorrect(double x0, double y0, double z0,
+					  double x1, double y1, double z1,
+					  double x2, double y2, double z2,
+					  viewcontext* vc);
+
 //=================================================
 
 dynamicdraw::dynamicdraw() {
@@ -51,16 +56,23 @@ dynamicdraw::~dynamicdraw() {
 
 void dynamicdraw::paint(GraphicsContext* gc) {
 	// refresh the image.
-	theImage->draw(gc);
+	gc->clear();
+	theImage->draw(gc,m_vc);
+	gc->setColor(color);
 }
 
 void dynamicdraw::paint(GraphicsContext* gc, viewcontext* vc) {
 	// refresh the image.
+	gc->clear();
 	theImage->draw(gc,vc);
+	gc->setColor(color);
 }
 
 void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 		int x, int y) {
+
+
+
 	if (drawingMode == DRAWMODE_LINE) {
 		x0 = x;
 		y0 = y;
@@ -71,9 +83,15 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 		isDragging = true;
 
 	} else if (drawingMode == DRAWMODE_POINT) {
-		point* myPoint = new point(x, y, 0, color);
+		matrix c(4,4);
+		c = inverseCorrect(x,y,0,
+					       0,0,0,
+					       0,0,0,
+					       m_vc);
+
+		point* myPoint = new point(c[0][0], c[1][0], c[2][0], color);
 		gc->setMode(GraphicsContext::MODE_XOR);
-		myPoint->draw(gc);
+		myPoint->draw(gc,m_vc);
 		theImage->add(myPoint);
 
 	} else if (drawingMode == DRAWMODE_CIRCLE) {
@@ -116,6 +134,14 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 
 void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 		int y) {
+
+	/// Matrix used for inversion correction
+	matrix c(4,4);
+	c = inverseCorrect(x0,y0,0,
+				       x1,y1,0,
+				       x2,y2,0,
+				       m_vc);
+
 	if (drawingMode == DRAWMODE_LINE) {
 		if (isDragging) {
 			gc->drawLine(x0, y0, x1, y1);
@@ -123,8 +149,8 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 			y1 = y;
 			gc->setMode(GraphicsContext::MODE_NORMAL);
 
-			line* myLine = new line(x0, y0, 0, x1, y1, 0, color);
-			myLine->draw(gc);
+			line* myLine = new line(c[0][0], c[1][0], c[2][0], c[0][1], c[1][1], c[2][1], color);
+			myLine->draw(gc,m_vc);
 			// Add the line to the image and draw it.
 			theImage->add(myLine);
 			isDragging = false;
@@ -142,9 +168,9 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 			y1 = y;
 			gc->setMode(GraphicsContext::MODE_NORMAL);
 
-			circle* myCircle = new circle(x0, y0, 0,
+			circle* myCircle = new circle(c[0][0], c[1][0], c[2][0],
 					getDistance(x0, y0, x1, y1), color);
-			myCircle->draw(gc);
+			myCircle->draw(gc,m_vc);
 			theImage->add(myCircle);
 			isDragging = false;
 		}
@@ -159,13 +185,16 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 				isDragging = false;
 				state = STATE_ENDTRI;
 			} else if (state == STATE_ENDTRI) {
+				gc->drawLine(x0, y0, x1, y1);
 				gc->drawLine(x0, y0, x2, y2);
 				gc->drawLine(x1, y1, x2, y2);
+
 				gc->setMode(GraphicsContext::MODE_NORMAL);
 
-				triangle* myTri = new triangle(x0, y0, 0, x1, y1, 0, x, y, 0,
-						color);
-				myTri->draw(gc);
+				triangle* myTri = new triangle(c[0][0], c[1][0], c[2][0],
+											   c[0][1], c[1][1], c[2][1],
+											   c[0][2], c[1][2], c[2][2], color);
+				myTri->draw(gc,m_vc);
 				theImage->add(myTri);
 				isDragging = false;
 				state = STATE_NEWTRI;
@@ -215,10 +244,10 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 	} else if(drawingMode == DRAWMODE_ROTATE){
 		if(isDragging){
 			paint(gc,m_vc);
-			m_vc->translate(-x0,-y0,0);
 			m_vc->rotate((x0 - x)/30.0,0,0);
-			m_vc->translate(x0,y0,0);
 			paint(gc,m_vc);
+
+
 			x0 = x;
 			y0 = y;
 		}
@@ -326,4 +355,20 @@ int getDistance(int x0, int y0, int x1, int y1) {
 		y = y1 - y0;
 	}
 	return (sqrt((x * x) + (y * y)));
+}
+
+/// Creates a corrected set of coordinates in a matrix for saving a newly drawn shape.
+matrix inverseCorrect(double x0, double y0, double z0,
+					  double x1, double y1, double z1,
+					  double x2, double y2, double z2,
+					  viewcontext* vc){
+
+	/// Corrected matrix to compensate for viewport offsets
+	matrix c(4,4);
+
+	c[0][0] = x0; c[1][0] = y0; c[2][0] = z0; c[3][0] = 1;
+	c[0][1] = x1; c[1][1] = y1; c[2][1] = z1; c[3][1] = 1;
+	c[0][2] = x2; c[1][2] = y2; c[2][2] = z2; c[3][2] = 1;
+
+	return vc->applyInverse(c);
 }

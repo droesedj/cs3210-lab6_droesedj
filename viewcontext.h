@@ -38,6 +38,8 @@ public:
 
 	matrix applyTransform(matrix target);
 
+	matrix applyInverse(matrix target);
+
 private:
 
 	matrix* transform;

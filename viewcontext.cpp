@@ -43,6 +43,8 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 
 	matrix rotato = matrix::identity(4);
 
+	matrix rotatoInverse = matrix::identity(4);
+
 	// convert degrees to radians.
 	double radRoll = 	roll * (M_PI/180);
 	//double radPitch = 	roll * (M_PI/180);
@@ -53,7 +55,13 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 	rotato[1][0] = sin(radRoll);
 	rotato[1][1] = cos(radRoll);
 
-	*transform = *transform * rotato;
+	rotatoInverse[0][0] = cos(-radRoll);
+	rotatoInverse[0][1] = -sin(-radRoll);
+	rotatoInverse[1][0] = sin(-radRoll);
+	rotatoInverse[1][1] = cos(-radRoll);
+
+	*transform = rotato * *transform;
+	*inverse =   rotatoInverse * *inverse;
 }
 
 // Scaling matrix
@@ -67,26 +75,32 @@ void viewcontext::scale(double x, double y, double z){
 
 
 	matrix scaler = matrix::identity(4);
+	matrix scalerInverse = matrix::identity(4);
+
 
 	if(x == 0.0){
-		scaler[0][0] = MINIMUM_ALLOWED_SCALE;
+		//scaler[0][0] = MINIMUM_ALLOWED_SCALE;
 	} else {
 		scaler[0][0] = x;
+		scalerInverse[0][0] = 1.0/x;
 	}
 
 	if(y == 0.0){
-		scaler[1][1] = MINIMUM_ALLOWED_SCALE;
+		//scaler[1][1] = MINIMUM_ALLOWED_SCALE;
 	} else {
 		scaler[1][1] = y;
+		scalerInverse[1][1] = 1.0/y;
 	}
 
 	if(z == 0.0){
-		scaler[2][2] = MINIMUM_ALLOWED_SCALE;
+		//scaler[2][2] = MINIMUM_ALLOWED_SCALE;
 	} else {
 		scaler[2][2] = z;
+		scalerInverse[2][2] = 1.0/z;
 	}
 
 	*transform = *transform * scaler;
+	*inverse = *inverse * scalerInverse;
 }
 
 // Translation matrix
@@ -97,9 +111,10 @@ void viewcontext::scale(double x, double y, double z){
 void viewcontext::translate(double x, double y, double z){
 	//TODO
 
-	matrix translator(4,4);
-	matrix translatorInverse(4,4);
-	//matrix translator = matrix::identity(4);
+//	matrix translator(4,4);
+//	matrix translatorInverse(4,4);
+	matrix translator = matrix::identity(4);
+	matrix translatorInverse = matrix::identity(4);
 
 	translator[0][3] = x;
 	translator[1][3] = y;
@@ -109,9 +124,9 @@ void viewcontext::translate(double x, double y, double z){
 	translatorInverse[1][3] = -y;
 	translatorInverse[2][3] = -z;
 
-	*transform = *transform + translator;
+	*transform = translator * *transform;
 
-	*inverse = *inverse + translatorInverse;
+	*inverse = translatorInverse * *inverse;
 
 }
 
@@ -123,6 +138,9 @@ matrix viewcontext::applyTransform(matrix target){
 	return *transform * target;
 }
 
+matrix viewcontext::applyInverse(matrix target){
+	return *inverse * target;
+}
 
 
 /// private "Helper" Functions
