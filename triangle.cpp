@@ -50,7 +50,6 @@ triangle::triangle(double x,  double y,  double z,
 	(*p3)[1][0] = y2;
 	(*p3)[2][0] = z2;
 	(*p3)[3][0] = 1.0;
-
 	color = col;
 }
 
@@ -74,7 +73,7 @@ triangle& triangle::operator=(const triangle& from){
 void triangle::draw(GraphicsContext* gc){
 	gc->setColor(color);
 	gc->drawLine((int)(*p1)[0][0],(int)(*p1)[1][0],
-				 (int)(*p2)[0][0],(int)(*p2)[1][0]);
+				 (int)(*p1)[0][1],(int)(*p1)[1][1]);
 	gc->drawLine((int)(*p2)[0][0],(int)(*p2)[1][0],
 				 (int)(*p3)[0][0],(int)(*p3)[1][0]);
 	gc->drawLine((int)(*p3)[0][0],(int)(*p3)[1][0],

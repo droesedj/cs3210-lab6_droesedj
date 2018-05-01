@@ -43,6 +43,11 @@ public:
 private:
 
 	matrix* transform;
+
+	matrix* mTranslate;
+	matrix* mRotate;
+	matrix* mScale;
+
 	matrix* inverse;
 
 };

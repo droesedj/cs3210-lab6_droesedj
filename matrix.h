@@ -133,6 +133,9 @@ class matrix
 		// << operator declared below.
 		std::ostream& out(std::ostream& os) const;
 		
+
+		matrix inverse(matrix m, unsigned int size);
+
 	private:
 		// The data - note, per discussion on arrays, you can store these data
 		// as a 1-D dynamic array, thus the double* below.  Alternatively, and

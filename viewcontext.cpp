@@ -8,19 +8,27 @@
 #include "viewcontext.h"
 
 
-void updateInverse();
-
 
 viewcontext::viewcontext(){
 	transform = new matrix(4,4);
 	*transform = matrix::identity(4);
 	inverse = new matrix(4,4);
 	*inverse = matrix::identity(4);
+
+	mTranslate = new matrix(4,4);
+	*mTranslate = matrix::identity(4);
+	mRotate = new matrix(4,4);
+	*mRotate = matrix::identity(4);
+	mScale = new matrix(4,4);
+	*mScale = matrix::identity(4);
 }
 
 viewcontext::~viewcontext(){
 	delete transform;
 	delete inverse;
+	delete mTranslate;
+	delete mScale;
+	delete mRotate;
 }
 
 matrix* viewcontext::convertFromCartesian(matrix* input){
@@ -55,13 +63,8 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 	rotato[1][0] = sin(radRoll);
 	rotato[1][1] = cos(radRoll);
 
-	rotatoInverse[0][0] = cos(-radRoll);
-	rotatoInverse[0][1] = -sin(-radRoll);
-	rotatoInverse[1][0] = sin(-radRoll);
-	rotatoInverse[1][1] = cos(-radRoll);
 
-	*transform = rotato * *transform;
-	*inverse =   rotatoInverse * *inverse;
+	*mRotate = rotato * *mRotate;
 }
 
 // Scaling matrix
@@ -75,32 +78,26 @@ void viewcontext::scale(double x, double y, double z){
 
 
 	matrix scaler = matrix::identity(4);
-	matrix scalerInverse = matrix::identity(4);
-
 
 	if(x == 0.0){
-		//scaler[0][0] = MINIMUM_ALLOWED_SCALE;
+		scaler[0][0] = MINIMUM_ALLOWED_SCALE;
 	} else {
 		scaler[0][0] = x;
-		scalerInverse[0][0] = 1.0/x;
 	}
 
 	if(y == 0.0){
-		//scaler[1][1] = MINIMUM_ALLOWED_SCALE;
+		scaler[1][1] = MINIMUM_ALLOWED_SCALE;
 	} else {
 		scaler[1][1] = y;
-		scalerInverse[1][1] = 1.0/y;
 	}
 
 	if(z == 0.0){
-		//scaler[2][2] = MINIMUM_ALLOWED_SCALE;
+		scaler[2][2] = MINIMUM_ALLOWED_SCALE;
 	} else {
 		scaler[2][2] = z;
-		scalerInverse[2][2] = 1.0/z;
 	}
 
-	*transform = *transform * scaler;
-	*inverse = *inverse * scalerInverse;
+	*mScale = scaler * *mScale;
 }
 
 // Translation matrix
@@ -111,22 +108,13 @@ void viewcontext::scale(double x, double y, double z){
 void viewcontext::translate(double x, double y, double z){
 	//TODO
 
-//	matrix translator(4,4);
-//	matrix translatorInverse(4,4);
 	matrix translator = matrix::identity(4);
-	matrix translatorInverse = matrix::identity(4);
 
 	translator[0][3] = x;
 	translator[1][3] = y;
 	translator[2][3] = z;
 
-	translatorInverse[0][3] = -x;
-	translatorInverse[1][3] = -y;
-	translatorInverse[2][3] = -z;
-
-	*transform = translator * *transform;
-
-	*inverse = translatorInverse * *inverse;
+	*mTranslate = translator * *mTranslate;
 
 }
 
@@ -135,20 +123,15 @@ void viewcontext::out(){
 }
 
 matrix viewcontext::applyTransform(matrix target){
+
+	*transform = ((*mTranslate) * *mRotate) * *mScale;
+
 	return *transform * target;
 }
 
 matrix viewcontext::applyInverse(matrix target){
-	return *inverse * target;
+	return transform->inverse(*transform,4) * target;
 }
 
 
 /// private "Helper" Functions
-
-
-void updateInverse(){
-
-
-
-
-}
