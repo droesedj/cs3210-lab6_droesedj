@@ -126,3 +126,11 @@ matrix viewcontext::applyTransform(matrix target){
 matrix viewcontext::applyInverse(matrix target){
 	return transform->inverse(*transform,4) * target;
 }
+
+void viewcontext::resetTransforms(){
+	*transform = matrix::identity(4);
+	*mRotate = matrix::identity(4);
+	*mTranslate = matrix::identity(4);
+	*mScale = matrix::identity(4);
+	*inverse = matrix::identity(4);
+}

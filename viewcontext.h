@@ -66,6 +66,11 @@ public:
 	 */
 	matrix applyInverse(matrix target);
 
+	/**
+	 * Clear the transform and inverse matrices.
+	 */
+	void resetTransforms();
+
 private:
 
 	/// Stores the homogenous transform matrix

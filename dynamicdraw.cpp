@@ -293,6 +293,10 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 			m_vc->scale(0.5,0.5,0.5);
 			paint(gc, m_vc);
 			return;
+		} else if (keycode == 'z') {
+			m_vc->resetTransforms();
+			paint(gc, m_vc);
+			return;
 		}
 		// Color selection
 		if (keycode == '1') {

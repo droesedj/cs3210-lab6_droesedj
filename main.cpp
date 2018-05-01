@@ -35,11 +35,12 @@ int main(int argc, char**argv) {
 			  << "\tLine     = l\n"
 			  << "\tTriangle = t\n"
 			  << "\tCircle   = c\n"
-			  << "\nTRANSFORM TOOLS:\n"
+			  << "\nVIEWER TOOLS:\n"
 			  << "\tTranslate = x\n"
 			  << "\tRotate    = r\n"
 			  << "\tZoom In   = +\n"
 			  << "\tZoom Out  = -\n"
+			  << "\tReset View= z\n"
 			  << "When the program is closed, the image will be saved to output.txt.\n";
 
 	if(argc == 2){
