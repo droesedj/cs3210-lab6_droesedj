@@ -123,8 +123,7 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 			isDragging = true;
 		}
 	} else if(drawingMode == DRAWMODE_ROTATE ||
-			  drawingMode == DRAWMODE_TRANSLATE ||
-			  drawingMode == DRAWMODE_SCALE){
+			  drawingMode == DRAWMODE_TRANSLATE){
 		x0 = x;
 		y0 = y;
 		gc->setMode(GraphicsContext::MODE_XOR);
@@ -201,8 +200,7 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 			}
 		}
 	} else if(drawingMode == DRAWMODE_ROTATE ||
-			  drawingMode == DRAWMODE_TRANSLATE ||
-			  drawingMode == DRAWMODE_SCALE){
+			  drawingMode == DRAWMODE_TRANSLATE){
 		if(isDragging){
 			gc->setMode(GraphicsContext::MODE_NORMAL);
 			isDragging = false;
@@ -260,21 +258,6 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 			x0 = x;
 			y0 = y;
 		}
-	} else if(drawingMode == DRAWMODE_SCALE){
-		if(isDragging){
-
-			double dist = getDistance(x0,y0,x,y);
-
-			paint(gc,m_vc);
-
-			m_vc->translate(-x0,-y0,0);
-
-			m_vc->scale(dist/1000.0,dist/1000.0,1.0);
-
-			m_vc->translate(x0,y0,0);
-
-			paint(gc,m_vc);
-		}
 	}
 }
 
@@ -302,8 +285,13 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 		} else if (keycode == 'x') {
 			drawingMode = DRAWMODE_TRANSLATE;
 			return;
-		} else if (keycode == 's') {
-			drawingMode = DRAWMODE_SCALE;
+		} else if (keycode == '+') {
+			m_vc->scale(2,2,2);
+			paint(gc, m_vc);
+			return;
+		} else if (keycode == '-') {
+			m_vc->scale(0.5,0.5,0.5);
+			paint(gc, m_vc);
 			return;
 		}
 		// Color selection

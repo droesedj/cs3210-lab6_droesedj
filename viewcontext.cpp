@@ -47,7 +47,6 @@ matrix* viewcontext::convertToCartesian(matrix* input){
 // | 0			0			1	0 |
 // | 0			0			0	1 ]
 void viewcontext::rotate(double roll, double pitch, double yaw){
-	//TODO
 
 	matrix rotato = matrix::identity(4);
 
@@ -73,9 +72,6 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 // | 0 0 Z 0 |
 // | 0 0 0 1 ]
 void viewcontext::scale(double x, double y, double z){
-	//TODO
-
-
 
 	matrix scaler = matrix::identity(4);
 
@@ -106,7 +102,6 @@ void viewcontext::scale(double x, double y, double z){
 // | 0 0 1 Z |
 // | 0 0 0 1 |
 void viewcontext::translate(double x, double y, double z){
-	//TODO
 
 	matrix translator = matrix::identity(4);
 
@@ -115,7 +110,6 @@ void viewcontext::translate(double x, double y, double z){
 	translator[2][3] = z;
 
 	*mTranslate = translator * *mTranslate;
-
 }
 
 void viewcontext::out(){
@@ -132,6 +126,3 @@ matrix viewcontext::applyTransform(matrix target){
 matrix viewcontext::applyInverse(matrix target){
 	return transform->inverse(*transform,4) * target;
 }
-
-
-/// private "Helper" Functions
